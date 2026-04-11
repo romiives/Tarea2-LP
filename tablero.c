@@ -24,13 +24,13 @@ void tablero_liberar(Tablero *tablero) {
     free(tablero);
 } 
 
-void tablero_imprimir(Tablero *t) {
+void tablero_imprimir(Tablero *tablero) {
     for (int i=0; i<t->H; i++) {
         for (int j=0; j<t->W;j++) {
             if(t->celdas[i][j] = NULL) {
                 printf("[ ]");
             } else {
-                printf("[X]")
+                printf("[X]");
             }
         }
         printf("\n");
