@@ -21,5 +21,10 @@ Tablero* tablero_crear(int ancho, int alto) {
 //}
 
 
-//void tablero_liberar(struct Tablero *tablero) {
-//} 
+void tablero_liberar(Tablero *tablero) {
+    for(int i=0; i<tablero->H; i++){
+        free(tablero->celdas[i]);
+    }
+    free(tablero->celdas);
+    free(tablero);
+} 
