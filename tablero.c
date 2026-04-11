@@ -17,9 +17,9 @@ struct Tablero* tablero_crear(int ancho, int alto) {
 }
 
 //void tablero_imprimir(struct Juego *juego) {
-    Tablero *t = juego->t;
+    //Tablero *t = juego->t;
 //}
 
 
-void tablero_liberar(struct Tablero *tablero) {
-} 
+//void tablero_liberar(struct Tablero *tablero) {
+//} 
