@@ -1,6 +1,7 @@
 #include "tablero.h"
 #include <stdlib.h>
 #include <stddef.h>
+#include <stdio.h>
 
 Tablero* tablero_crear(int ancho, int alto) {
     Tablero *t = malloc(sizeof(Tablero));
@@ -25,9 +26,9 @@ void tablero_liberar(Tablero *tablero) {
 } 
 
 void tablero_imprimir(Tablero *tablero) {
-    for (int i=0; i<t->H; i++) {
-        for (int j=0; j<t->W;j++) {
-            if(t->celdas[i][j] = NULL) {
+    for (int i=0; i<tablero->H; i++) {
+        for (int j=0; j<tablero->W;j++) {
+            if(tablero->celdas[i][j] = NULL) {
                 printf("[ ]");
             } else {
                 printf("[X]");

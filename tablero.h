@@ -9,6 +9,6 @@ typedef struct {
 
 Tablero* tablero_crear(int ancho, int alto);
 void tablero_liberar(Tablero *tablero); /* debe limpiar la memoria heap */
-void tablero_imprimir(struct Juego *juego);
+void tablero_imprimir(Tablero *tablero);
 
 #endif 
