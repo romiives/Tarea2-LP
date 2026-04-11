@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-struct Tablero* tablero_crear(int ancho, int alto) {
-    struct Tablero *t = malloc(sizeof(struct Tablero));
+Tablero* tablero_crear(int ancho, int alto) {
+    Tablero *t = malloc(sizeof(struct Tablero));
     t->W = ancho;
     t->H = alto; 
-    t->celdas = malloc(alto * sizeof (void**));
+    t->celdas = malloc(alto * sizeof(void**));
     for (int i=0; i<alto; i++) {
         t->celdas[i] = malloc(ancho * sizeof(void*));
         for (int j=0; j<ancho; j++) {
