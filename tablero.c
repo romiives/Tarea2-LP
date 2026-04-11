@@ -16,11 +16,6 @@ Tablero* tablero_crear(int ancho, int alto) {
     return t;
 }
 
-//void tablero_imprimir(struct Juego *juego) {
-    //Tablero *t = juego->t;
-//}
-
-
 void tablero_liberar(Tablero *tablero) {
     for(int i=0; i<tablero->H; i++){
         free(tablero->celdas[i]);
@@ -28,3 +23,20 @@ void tablero_liberar(Tablero *tablero) {
     free(tablero->celdas);
     free(tablero);
 } 
+
+void tablero_imprimir(Tablero *t) {
+    for (int i=0; i<t->H; i++) {
+        for (int j=0; j<t->W;j++) {
+            if(t->celdas[i][j] = NULL) {
+                printf("[ ]");
+            } else {
+                printf("[X]")
+            }
+        }
+        printf("\n");
+    }
+}
+
+//void tablero_imprimir(struct Juego *juego) {
+    //Tablero *t = juego->t;
+//}

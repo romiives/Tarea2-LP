@@ -8,5 +8,6 @@ int main() {
     printf("Tablero creado\n");
 
     tablero_liberar(t);
+    tablero_imprimir(t);
     return 0;
 }
