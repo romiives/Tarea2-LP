@@ -7,5 +7,6 @@ int main() {
 
     printf("Tablero creado\n");
 
+    tablero_liberar(t);
     return 0;
 }

@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 Tablero* tablero_crear(int ancho, int alto) {
-    Tablero *t = malloc(sizeof(struct Tablero));
+    Tablero *t = malloc(sizeof(Tablero));
     t->W = ancho;
     t->H = alto; 
     t->celdas = malloc(alto * sizeof(void**));
