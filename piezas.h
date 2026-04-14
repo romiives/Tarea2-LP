@@ -1,3 +1,6 @@
+#ifndef PIEZAS_H 
+#define PIEZAS_H
+
 typedef struct {
     char tipo; /* 'P'=Peon, 'C'=Caballo, 'A'=Afil, 'T'=Torre, 'Q'=Reina, 'R'=Rey */
     int hp;
@@ -7,6 +10,8 @@ typedef struct {
 typedef struct {
     Pieza *pieza; /* NULL si la celda esta vacia */
 } Celda;
+
+#endif
 
 void spawn_nivel(struct Juego *juego, int nivel);
 void mover_enemigos(struct Juego *juego);

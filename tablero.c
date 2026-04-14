@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
+#include "piezas.h"
 
 Tablero* tablero_crear(int ancho, int alto) {
     Tablero *t = malloc(sizeof(Tablero));
@@ -31,7 +32,8 @@ void tablero_imprimir(Tablero *tablero) {
             if(tablero->celdas[i][j] == NULL) {
                 printf("[ ]");
             } else {
-                printf("[X]");
+                Pieza *p = (Pieza*) tablero->celdas[i][j];
+                printf("[%c], p->tipo");
             }
         }
         printf("\n");
