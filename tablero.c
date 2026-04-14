@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include "piezas.h"
-#include <stdbool.h>
+
 
 Tablero* tablero_crear(int ancho, int alto) {
     Tablero *t = malloc(sizeof(Tablero));
