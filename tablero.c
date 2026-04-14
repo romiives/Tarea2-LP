@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include "piezas.h"
+#include <stdbool.h>
 
 Tablero* tablero_crear(int ancho, int alto) {
     Tablero *t = malloc(sizeof(Tablero));
@@ -33,7 +34,7 @@ void tablero_imprimir(Tablero *tablero) {
                 printf("[ ]");
             } else {
                 Pieza *p = (Pieza*) tablero->celdas[i][j];
-                printf("[%c], p->tipo");
+                printf("[%c]", p->tipo);
             }
         }
         printf("\n");
