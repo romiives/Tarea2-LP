@@ -25,11 +25,11 @@ int main() {
     Tablero *t = tablero_crear(12, 12);
     Pieza *rey = crear_rey(t);
     Pieza *peon = crear_peon(t);
-    FuncArma armas[4];
-    armas[0] = disparar_escopeta;
-    armas[1] = disparar_escopeta;
-    armas[2] = disparar_escopeta;
-    armas[3] = disparar_escopeta;
+    Armas armas;
+    armas.disparar[0] = escopeta;
+    armas.disparar[1] = escopeta;
+    armas.disparar[2] = escopeta;
+    armas.disparar[3] = escopeta;
 
     //movimientos 
     char letra;
@@ -45,10 +45,19 @@ int main() {
 
         //armas y su direccion
         if (letra >= '1' && letra <= '4'){
+            int dx = 0, dy = 0;
             char direccion;
             printf("Direccion (w,a,s,d,q,e,z,c): ");
             scanf("%c", &direccion);
-            armas[letra - '1'](t, rey, direccion);
+            if (direccion == 'w') dy = -1;
+            if (direccion == 's') dy = 1;
+            if (direccion == 'a') dx = -1;
+            if (direccion == 'd') dx = 1;
+            if (direccion == 'q'){dx = -1; dy = -1;}
+            if (direccion == 'e'){dx = 1; dy = -1;}
+            if (direccion == 'z'){dx = -1; dy = 1;}
+            if (direccion == 'c'){dx = 1; dy = 1;}
+            armas.disparar[letra - '1'](t, rey, dx, dy);
             continue;
         }
 

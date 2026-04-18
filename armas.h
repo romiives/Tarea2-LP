@@ -1,5 +1,6 @@
 #ifndef ARMAS_H
 #define ARMAS_H
+#include <stdbool.h>
 #include "tablero.h"
 #include "piezas.h"
 
@@ -12,8 +13,7 @@ typedef struct {
     FuncArma disparar[4]; /* Arreglo de punteros a funcion con las 4 armas */
 } Armas;
 
-typedef void(*FuncArma)(Tablero*, Pieza*, char);
-void disparar_escopeta(Tablero *t, Pieza *rey, char direccion);
+void disparar_escopeta(Tablero *t, Pieza *rey, int dx, int dy);
 
 bool escopeta(struct Juego *j, int dir_x, int dir_y);
 bool francotirador(struct Juego *j, int dir_x, int dir_y);
