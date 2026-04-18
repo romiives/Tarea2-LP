@@ -1,9 +1,7 @@
 #include <stdio.h>
-#include "tablero.h"
 #include <stdlib.h>
-#include "piezas.h"
 #include <time.h>
-#include "armas.h"
+#include "main.h"
 
 //interfaz
 void imprimir_interfaz(int nivel, int enemigos){
@@ -22,23 +20,28 @@ void imprimir_interfaz(int nivel, int enemigos){
 
 int main() {
     srand(time(NULL));
-    Tablero *t = tablero_crear(12, 12);
-    Pieza *rey = crear_rey(t);
-    Pieza *peon = crear_peon(t);
-    Armas armas;
-    armas.disparar[0] = escopeta;
-    armas.disparar[1] = escopeta;
-    armas.disparar[2] = escopeta;
-    armas.disparar[3] = escopeta;
+
+    Juego *j = malloc(sizeof(Juego));
+    j->t = tablero_crear(12,12);
+    j->jugador = crear_rey(j->t);
+    Pieza *peon = crear_peon(j->t);
+    j->nivel_actual = 1;
+    j->turno_enemigos = 0;
+    
+    //armas
+    j->arsenal.disparar[0] = escopeta;
+    j->arsenal.disparar[1] = francotirador;
+    j->arsenal.disparar[2] = granada;
+    j->arsenal.disparar[3] = especial;
 
     //movimientos 
     char letra;
     
     while(1){
-        imprimir_interfaz(1,1);
-        tablero_imprimir(t);
+        imprimir_interfaz(j->nivel_actual, 1);
+        tablero_imprimir(j->t);
         printf("\n> Ingrese accion: ");
-        scanf("%c", &letra);
+        scanf(" %c", &letra);
 
         //salida ddel juego
         if (letra == 'x'){ break; }
@@ -48,7 +51,7 @@ int main() {
             int dx = 0, dy = 0;
             char direccion;
             printf("Direccion (w,a,s,d,q,e,z,c): ");
-            scanf("%c", &direccion);
+            scanf(" %c", &direccion);
             if (direccion == 'w') dy = -1;
             if (direccion == 's') dy = 1;
             if (direccion == 'a') dx = -1;
@@ -57,13 +60,13 @@ int main() {
             if (direccion == 'e'){dx = 1; dy = -1;}
             if (direccion == 'z'){dx = -1; dy = 1;}
             if (direccion == 'c'){dx = 1; dy = 1;}
-            armas.disparar[letra - '1'](*t, *rey, dx, dy);
+            j->arsenal.disparar[letra - '1'](j, dx, dy);
             continue;
         }
 
         //mov del rey
-        int x_nueva = rey->x;
-        int y_nueva = rey->y;
+        int x_nueva = j->jugador->x;
+        int y_nueva = j->jugador->y;
         if (letra == 'w') y_nueva--;
         if (letra == 's') y_nueva++;
         if (letra == 'a') x_nueva--;
@@ -73,25 +76,26 @@ int main() {
         if (letra == 'z'){x_nueva--; y_nueva++;}
         if (letra == 'c'){x_nueva++; y_nueva++;}
         
-        if(x_nueva >=0 && x_nueva < t->W && y_nueva >= 0 && y_nueva < t->H){
-            t->celdas[rey->y][rey->x] = NULL;
-            rey->x = x_nueva;
-            rey->y = y_nueva;
-            t->celdas[rey->y][rey->x] = (void*) rey;
+        if(x_nueva >=0 && x_nueva < j->t->W && y_nueva >= 0 && y_nueva < j->t->H){
+            j->t->celdas[j->jugador->y][j->jugador->x] = NULL;
+            j->jugador->x = x_nueva;
+            j->jugador->y = y_nueva;
+            j->t->celdas[j->jugador->y][j->jugador->x] = (void*) j->jugador;
         }
 
         //mov del pein
-        mover_peon(t, peon, rey);
+        mover_peon(j->t, peon, j->jugador);
 
         //peon choca con rey
-        if (peon->x == rey->x && peon->y == rey->y){
+        if (peon->x == j->jugador->x && peon->y == j->jugador->y){
             printf("El rey ha sido alcanzado\n");
             break;
         }
     }
     free(peon);
-    free(rey);
-    tablero_liberar(t);
+    free(j->jugador);
+    tablero_liberar(j->t);
+    free(j);
     printf("Juego Terminado\n");
     return 0;
 }
