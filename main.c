@@ -57,7 +57,7 @@ int main() {
             if (direccion == 'e'){dx = 1; dy = -1;}
             if (direccion == 'z'){dx = -1; dy = 1;}
             if (direccion == 'c'){dx = 1; dy = 1;}
-            armas.disparar[letra - '1'](t, rey, dx, dy);
+            armas.disparar[letra - '1'](*t, *rey, dx, dy);
             continue;
         }
 
