@@ -5,7 +5,7 @@
 
 int main() {
 
-    Tablero *t = tablero_crear(5, 5);
+    Tablero *t = tablero_crear(12, 12);
 
     Pieza *rey = malloc(sizeof(Pieza));
     rey->tipo = 'R';
