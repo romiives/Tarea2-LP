@@ -4,6 +4,21 @@
 #include "piezas.h"
 #include <time.h>
 
+//interfaz
+void imprimir_interfaz(int nivel, int enemigos){
+    printf("\n===================================================\n");
+    printf("Nivel: %d | Enemigos restantes: %d\n", nivel, enemigos);
+    printf("Arsenal: [1] Escopeta [2] Sniper [3] Granada [4] Especial\n");
+    printf("=============================================\n\n");
+    printf("ACCIONES DISPONIBLES\n");
+    printf("Disparo: [1-4]\n");
+    printf("Movimiento:\n");
+    printf("[Q][W][E]\n");
+    printf("[A]  [D]\n");
+    printf("[Z][S][C]\n\n");
+
+}
+
 int main() {
     Tablero *t = tablero_crear(12, 12);
 
@@ -20,15 +35,11 @@ int main() {
 
     //movimientos 
     char letra;
-    printf("Movimiento: WASD | Diagonales: QEZC\n");
-    printf("Armas: [1] Escopeta [2] Sniper [3] Granadas [4] Especial\n");
-    printf("Salir: presione 'x'\n");
     
     while(1){
-        printf("\n");
+        imprimir_interfaz(1,0);
         tablero_imprimir(t);
-
-        printf("\nIngrese accion (Movimiento o Arma 1-4): ");
+        printf("\n> Ingrese accion: ");
         scanf("%c", &letra);
 
         if (letra == 'x'){

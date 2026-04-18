@@ -32,7 +32,7 @@ void tablero_imprimir(Tablero *tablero) {
         }
         printf("\n");
     }
-    printf(" ");
+    printf("  ");
     for (int j=1;j<=tablero->W;j++){
         printf("%d", j);
     }
