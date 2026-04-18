@@ -33,6 +33,15 @@ int main() {
     j->arsenal.disparar[1] = francotirador;
     j->arsenal.disparar[2] = granada;
     j->arsenal.disparar[3] = especial;
+    //municion
+    j->arsenal.municion_maxima[0] = 2;
+    j->arsenal.municion_maxima[1] = 1;
+    j->arsenal.municion_maxima[2] = 2;
+    j->arsenal.municion_maxima[3] = 3;
+    //muncion actual
+    for(int i=0; i<4;i++){
+        j->arsenal.municion_actual[i] = j->arsenal.municion_maxima[i];
+    }
 
     //movimientos 
     char letra;
@@ -47,8 +56,13 @@ int main() {
         if (letra == 'x'){ break; }
 
         int accion_valida =0;
-        //armas y su direccion
+        //armas y disparo
         if (letra >= '1' && letra <= '4'){
+            int arma = letra - '1';
+            if(j->arsenal.municion_actual[arma]<=0){
+                printf("Sin municion\n");
+                continue;
+            }
             int dx = 0, dy = 0;
             char direccion;
             printf("Direccion (w,a,s,d,q,e,z,c): ");
@@ -61,34 +75,39 @@ int main() {
             if (direccion == 'e'){dx = 1; dy = -1;}
             if (direccion == 'z'){dx = -1; dy = 1;}
             if (direccion == 'c'){dx = 1; dy = 1;}
-            j->arsenal.disparar[letra - '1'](j, dx, dy);
+            j->arsenal.disparar[arma](j,dx, dy);
+            j->arsenal.municion_actual[arma]--;
             accion_valida = 1;
         }
 
-        //mov del rey
+        //mov 
         if (letra == 'w' || letra == 'a' || letra == 's' || letra == 'd' || letra == 'q' || letra == 'e' || letra == 'z' || letra == 'c'){
-            int x_nueva = j->jugador->x;
-            int y_nueva = j->jugador->y;
-            if (letra == 'w') y_nueva--;
-            if (letra == 's') y_nueva++;
-            if (letra == 'a') x_nueva--;
-            if (letra == 'd') x_nueva++;
-            if (letra == 'q'){x_nueva--; y_nueva--;}
-            if (letra == 'e'){x_nueva++; y_nueva--;}
-            if (letra == 'z'){x_nueva--; y_nueva++;}
-            if (letra == 'c'){x_nueva++; y_nueva++;}
-            if(x_nueva >=0 && x_nueva < j->t->W && y_nueva >= 0 && y_nueva < j->t->H){
+            int nx = j->jugador->x;
+            int ny = j->jugador->y;
+            if (letra == 'w') ny--;
+            if (letra == 's') ny++;
+            if (letra == 'a') nx--;
+            if (letra == 'd') nx++;
+            if (letra == 'q'){nx--; nx--;}
+            if (letra == 'e'){nx++; ny--;}
+            if (letra == 'z'){nx--; ny++;}
+            if (letra == 'c'){nx++; ny++;}
+            if(nx >=0 && nx < j->t->W && ny >= 0 && ny < j->t->H){
                 j->t->celdas[j->jugador->y][j->jugador->x] = NULL;
-                j->jugador->x = x_nueva;
-                j->jugador->y = y_nueva;
-                j->t->celdas[j->jugador->y][j->jugador->x] = (void*) j->jugador;
-            }
-            accion_valida =1;
+                j->jugador->x = nx;
+                j->jugador->y = ny;
+                j->t->celdas[ny][nx] = j->jugador;
+                if(j->arsenal.municion_actual[0] < j->arsenal.municion_maxima[0]){
+                    j->arsenal.municion_actual[0]++;
+                }
+                accion_valida =1;
+            }  
         }
         if (!accion_valida){
             printf("Accion Invalida\n");
             continue;
         }
+        
         //mov del pein
         mover_peon(j->t, peon, j->jugador);
 

@@ -10,6 +10,9 @@ typedef struct Juego {
     Pieza *jugador; /* El Rey */
     int nivel_actual; /* 1, 2 o 3 */
     int turno_enemigos; /* Contador para gestionar piezas lentas como la Torre */
+    int disparo_dx;
+    int disparo_dy;
+    int disparo_activo;
 } Juego;
 
 #endif
