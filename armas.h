@@ -1,4 +1,9 @@
-struct Juego; /* Forward declaration */
+#ifndef ARMAS_H
+#define ARMAS_H
+#include "tablero.h"
+#include "piezas.h"
+
+struct Juego; 
 typedef bool (*FuncArma)(struct Juego *j, int dir_x, int dir_y); /* Puntero a funcion */
 
 typedef struct {
@@ -7,8 +12,12 @@ typedef struct {
     FuncArma disparar[4]; /* Arreglo de punteros a funcion con las 4 armas */
 } Armas;
 
+typedef void(*FuncArma)(Tablero*, Pieza*, char);
+void disparar_escopeta(Tablero *t, Pieza *rey, char direccion);
+
 bool escopeta(struct Juego *j, int dir_x, int dir_y);
 bool francotirador(struct Juego *j, int dir_x, int dir_y);
 bool granada(struct Juego *j, int target_x, int target_y);
 bool especial(struct Juego *j, int dir_x, int dir_y);
 
+#endif
