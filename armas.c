@@ -62,8 +62,8 @@ bool francotirador(struct Juego *j, int dx, int dy){
 }
 
 bool granada(struct Juego *j, int x, int y){
-    int gx = j->jugador->x + dx*3;
-    int gy = j->jugador->y + dy*3;
+    int gx = j->jugador->x + x*3;
+    int gy = j->jugador->y + y*3;
     printf("Granada lanzada hacia (%d,%d)\n", gx, gy);
     for(int i=-1; i<=1; i++){
         for(int k=-1; k<=1; k++){

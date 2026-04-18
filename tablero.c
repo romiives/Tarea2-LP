@@ -19,31 +19,31 @@ Tablero* tablero_crear(int ancho, int alto) {
     return t;
 }
 
-void tablero_imprimir(Tablero *tablero) {
-    for (int i=0; i<tablero->H; i++) {
-        printf("%2d", tablero->H - i);
-        for (int j=0; j<tablero->W;j++) {
-            if(tablero->celdas[i][j] == NULL) {
+void tablero_imprimir(Tablero *t) {
+    for (int i=t->H - 1; i>=0; i--) {
+        printf("%2d", i + 1);
+        for (int j=0; j<t->W;j++) {
+            if(t->celdas[i][j] == NULL) {
                 printf("[ ]");
             } else {
-                Pieza *p = (Pieza*) tablero->celdas[i][j];
+                Pieza *p = (Pieza*) t->celdas[i][j];
                 printf("[%c]", p->tipo);
             }
         }
         printf("\n");
     }
     printf("   ");
-    for (int j=1;j<=tablero->W;j++){
+    for (int j=1;j<=t->W;j++){
         printf("%d", j);
     }
     printf("\n");
 }
 
-void tablero_liberar(Tablero *tablero) {
-    for(int i=0; i<tablero->H; i++){
-        free(tablero->celdas[i]);
+void tablero_liberar(Tablero *t) {
+    for(int i=0; i<t->H; i++){
+        free(t->celdas[i]);
     }
-    free(tablero->celdas);
-    free(tablero);
+    free(t->celdas);
+    free(t);
 } 
 
