@@ -232,11 +232,7 @@ void mover_enemigos(struct Juego *j){
 }
 
 bool verificar_estado_rey(struct Juego *j){
-    void *celda = j->t->celdas[j->jugador->y][j->jugador->x];
-    if(celda == NULL) return true;
-    Pieza *p = (Pieza*) celda;
-    if(p != j->jugador){
-        return true;
-    }
-    return false;
+    printf("HAS SIDO DERROTADO\n");
+    printf("El rey ha sido eliminado\n");
+    break;
 }
