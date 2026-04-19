@@ -184,6 +184,7 @@ int main() {
         //enemigos 
         mover_enemigos(j);
         //estado del rey
+        tablero_imprimir(j->t);
         if(verificar_estado_rey(j)){
             break;
         }
