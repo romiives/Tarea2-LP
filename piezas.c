@@ -221,6 +221,7 @@ void mover_enemigos(struct Juego *j){
         if(p->tipo == 'T') mover_torre(j->t, p, j->jugador, j->turno_enemigos);
         if(p->tipo == 'Q') mover_reina(j->t, p, j->jugador);
     }
+    j->turno_enemigos++;
 }
 
 bool verificar_estado_rey(struct Juego *j){
