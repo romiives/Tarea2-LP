@@ -158,6 +158,7 @@ bool especial(struct Juego *j, int dir_x, int dir_y){
                 }
             }
         }
+    }
     tablero_con_disparo(j->t, disparo);
     return true;
 }
