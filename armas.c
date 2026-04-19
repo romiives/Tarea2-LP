@@ -21,43 +21,33 @@ bool escopeta(struct Juego *j, int dir_x, int dir_y){
             disparo[i][k]=0;
     int x = j->jugador->x;
     int y = j->jugador->y;
-    printf("Escopeta dispara en (%d,%d)\n", dir_x, dir_y);
-    int impacto_x = -1, impacto_y = -1;
-    for(int i=1; i<=3;i++){
-        int nx = x + dir_x*i;
-        int ny = y + dir_y*i;
-        if(nx<0 || nx>=j->t->W || ny<0 || ny>=j->t->H) break;
-        disparo[ny][nx] =1;
-        if(j->t->celdas[ny][nx] != NULL){
-            Pieza *p =(Pieza*) j->t->celdas[ny][nx];
-            if(p->tipo != 'R'){
-                impacto_x = nx;
-                impacto_y = ny;
-                p->hp -= 2;
-                printf("Impacto a %c en (%d,%d) | HP restante: %d\n", p->tipo, nx, ny, p->hp);
-                if(p->hp <=0){
-                    free(p);
-                    j->t->celdas[ny][nx] = NULL;
-                    j->turno_enemigos--;
-                    printf("Enemigo eliminado\n");
-                }
+    printf("Escopeta (cono) en direccion (%d,%d)\n", dir_x, dir_y);
+    for(int d = 1; d <= 3; d++){
+        for(int desplazaminento = -d+1; desplazaminento <= d-1; desplazaminento++){
+            int nx, ny;
+            if(dir_x == 0){
+                nx = x + desplazaminento;
+                ny = y + dir_y * d;
             }
-            break;
-        }
-    }
-    if(impacto_x != -1){
-        for(int i=1; i<=3; i++){
-            int bx = impacto_x + dir_x *i;
-            int by = impacto_y + dir_y *i;
-            if(bx<0 || bx>=j->t->W || by<0 || by>=j->t->H) break;
-            disparo[by][bx] =1;
-            if(j->t->celdas[by][bx] !=NULL){
-                Pieza *p = (Pieza*) j->t->celdas[by][bx];
+            else if(dir_y == 0){
+                nx = x + dir_x * d;
+                ny = y + desplazaminento;
+            }
+            else{
+                nx =x + dir_x * d + desplazaminento;
+                ny =y + dir_y * d + desplazaminento;
+            }
+            if(nx<0 || nx>=j->t->W || ny<0 || ny>=j->t->H) continue;
+            disparo[ny][nx] = 1;
+            if(j->t->celdas[ny][nx] != NULL){
+                Pieza *p = (Pieza*) j->t->celdas[ny][nx];
                 if(p->tipo != 'R'){
-                    p->hp -=1;
+                    p->hp -= 2;
+                    printf("Impacto a %c en (%d,%d) | HP restante: %d\n",
+                           p->tipo, nx, ny, p->hp);
                     if(p->hp <= 0){
                         free(p);
-                        j->t->celdas[by][bx] =NULL;
+                        j->t->celdas[ny][nx] = NULL;
                         j->turno_enemigos--;
                         printf("Enemigo eliminado\n");
                     }
