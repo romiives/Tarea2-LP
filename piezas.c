@@ -83,6 +83,10 @@ void mover_peon(Tablero *t, Pieza *peon, Pieza *rey){
     int nx = peon->x +dx;
     int ny = peon->y +dy;
     if(nx<0 || nx>=t->W || ny<0 || ny>=t->H) return;
+    if(nx == rey->x && ny == rey->y){
+        printf("El rey ha muerto\n");
+        exit(0);
+    }
     if(t->celdas[ny][nx] != NULL){
         Pieza *p = (Pieza*) t->celdas[ny][nx];
         if(p->tipo != 'R'){
@@ -115,6 +119,10 @@ void mover_caballo(Tablero *t, Pieza *p, Pieza *rey){
             mejor_y = ny;
         }
     }
+    if(mejor_x == rey->x && mejor_y == rey->y){
+        printf("El rey ha muerto\n");
+        exit(0);
+    }
     t->celdas[p->y][p->x] = NULL;
     p->x = mejor_x;
     p->y = mejor_y;
@@ -128,21 +136,20 @@ void mover_alfil(Tablero *t, Pieza *p, Pieza *rey){
         int nx = p->x + dx;
         int ny = p->y + dy;
         if(nx<0||nx>=t->W||ny<0||ny>=t->H) break;
+        if(nx == rey->x && ny == rey->y){
+            printf("El rey ha muerto\n");
+            exit(0);
+        }
         if(t->celdas[ny][nx] != NULL){
-            Pieza *ocupante =(Pieza*) t->celdas[ny][nx];
-            if(ocupante ->tipo != 'R'){
                 break;
-            }
-
         }
         t->celdas[p->y][p->x] = NULL;
         p->x = nx;
         p->y = ny;
         t->celdas[ny][nx] = (void*) p;
-
-        if(nx== rey->x && ny== rey->y) break;
     }
 }
+
 
 void mover_torre(Tablero *t, Pieza *p, Pieza *rey, int turno){
     if(turno % 2 != 0) return;
@@ -156,11 +163,13 @@ void mover_torre(Tablero *t, Pieza *p, Pieza *rey, int turno){
         int nx = p->x + dx*i;
         int ny = p->y + dy*i;
         if(nx<0||nx>=t->W||ny<0||ny>=t->H) break;
+        if(nx == rey->x && ny == rey->y){
+            printf("El rey ha muerto\n");
+            exit(0);
+        }
+
         if(t->celdas[ny][nx] != NULL){
-            Pieza *ocupante =(Pieza*) t->celdas[ny][nx];
-            if (ocupante->tipo != 'R'){
-                break;
-            }
+            break;
         }
         t->celdas[p->y][p->x] = NULL;
         p->x = nx;
@@ -186,18 +195,17 @@ void mover_reina(Tablero *t, Pieza *p, Pieza *rey){
         int nx =p->x + dx*i;
         int ny =p->y + dy*i;
         if(nx<0 || nx>=t->W || ny<0 || ny>=t->H) break;
+        if(nx == rey->x && ny == rey->y){
+            printf("El rey ha muerto\n");
+            exit(0);
+        }
         if(t->celdas[ny][nx] != NULL){
-            Pieza *ocupante = (Pieza*) t->celdas[ny][nx];
-            if(ocupante->tipo != 'R'){
                 break;
-            }
         }
         t->celdas[p->y][p->x] =NULL;
         p->x = nx;
         p->y = ny;
         t->celdas[ny][nx] = p;
-
-        if(nx == rey->x && ny == rey->y) break;
     }
 }
 
