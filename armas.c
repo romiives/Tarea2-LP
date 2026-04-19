@@ -126,7 +126,7 @@ bool especial(struct Juego *j, int dir_x, int dir_y){
     int y = j->jugador->y;
     printf("Pulso Real en (%d,%d)\n", dir_x, dir_y);
     for(int i=1; i<=3; i++){
-        int nx=+ dir_x *i;
+        int nx=x+ dir_x *i;
         int ny=y+dir_y *i;
         if(nx<0 || nx>=j->t->W || ny<0 || ny>=j->t->H) break;
         disparo[ny][nx] =1;
