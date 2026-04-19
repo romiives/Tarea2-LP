@@ -62,26 +62,36 @@ void spawn_nivel(struct Juego *j, int nivel){
         j->turno_enemigos = 5;
     }
 }
+
 //movimiento del peon hacia el rey
 void mover_peon(Tablero *t, Pieza *peon, Pieza *rey){
-    int dx=0, dy=0;
-    //hacia el rey
-    if(rey->x > peon->x) dx =1;
-    if(rey->x < peon->x) dx =-1;
-    if(rey->y > peon->y) dy =1;
-    if(rey->y < peon->y) dy =-1;
+    int dx=0;
+    int dy=0;
+    int dif_x = rey->x - peon->x;
+    int dif_y = rey->y - peon->y;
+    if(abs(dif_x) == 1 && abs(dif_y) == 1){
+        dx = (dif_x > 0) ? 1 : -1;
+        dy = (dif_y > 0) ? 1 : -1;
+    }
+    else{
+        if(abs(dif_x) > abs(dif_y)){
+            dx = (dif_x>0) ? 1: -1;
+        } else {
+            dy = (dif_y>0) ? 1: -1;
+        }
+    }
     int nx = peon->x +dx;
     int ny = peon->y +dy;
-    //limites
-    if(nx <0 || nx>= t->W || ny <0 || ny>= t->H)return;
-    //no se mueve si no es el rey
+    if(nx<0 || nx>=t->W || ny<0 || ny>=t->H) return;
     if(t->celdas[ny][nx] != NULL){
-        Pieza *p =(Pieza*) t->celdas[ny][nx];
-        if(p->tipo != 'R') return;
+        Pieza *p = (Pieza*) t->celdas[ny][nx];
+        if(p->tipo != 'R'){
+            return;
+        }
     }
     t->celdas[peon->y][peon->x] = NULL;
-    peon->x = nx;
-    peon->y = ny;
+    peon->x =nx;
+    peon->y =ny;
     t->celdas[ny][nx] = (void*) peon;
 }
 
@@ -114,14 +124,23 @@ void mover_caballo(Tablero *t, Pieza *p, Pieza *rey){
 void mover_alfil(Tablero *t, Pieza *p, Pieza *rey){
     int dx = (rey->x > p->x) ? 1: -1;
     int dy = (rey->y > p->y) ? 1: -1;
-    int nx = p->x + dx;
-    int ny = p->y + dy;
-    if(nx<0||nx>=t->W||ny<0||ny>=t->H) return;
-    if(t->celdas[ny][nx] == NULL || (nx==rey->x && ny==rey->y)){
+    for(int i =1; i<=3; i++){
+        int nx = p->x + dx;
+        int ny = p->y + dy;
+        if(nx<0||nx>=t->W||ny<0||ny>=t->H) break;
+        if(t->celdas[ny][nx] != NULL){
+            Pieza *ocupante =(Pieza*) t->celdas[ny][nx];
+            if(ocupante ->tipo != 'R'){
+                break;
+            }
+
+        }
         t->celdas[p->y][p->x] = NULL;
         p->x = nx;
         p->y = ny;
         t->celdas[ny][nx] = (void*) p;
+
+        if(nx== rey->x && ny== rey->y) break;
     }
 }
 
@@ -133,36 +152,52 @@ void mover_torre(Tablero *t, Pieza *p, Pieza *rey, int turno){
     } else {
         dy =(rey->y > p->y) ? 1: -1;
     }
-    int nx = p->x + dx;
-    int ny = p->y + dy;
-    if(nx<0||nx>=t->W||ny<0||ny>=t->H) return;
-    if(t->celdas[ny][nx] == NULL || (nx==rey->x && ny==rey->y)){
+    for(int i= 1; i<=3; i++){
+        int nx = p->x + dx*i;
+        int ny = p->y + dy*i;
+        if(nx<0||nx>=t->W||ny<0||ny>=t->H) break;
+        if(t->celdas[ny][nx] != NULL){
+            Pieza *ocupante =(Pieza*) t->celdas[ny][nx];
+            if (ocupante->tipo != 'R'){
+                break;
+            }
+        }
         t->celdas[p->y][p->x] = NULL;
-        p->x =nx;
+        p->x = nx;
         p->y =ny;
         t->celdas[ny][nx] = (void*) p;
+        if(nx==rey->x && ny== rey->y) break;
     }
 }
 
 void mover_reina(Tablero *t, Pieza *p, Pieza *rey){
     int dx = 0, dy = 0;
-    if(abs(rey->x - p->x) > abs(rey->y - p->y)){
-        dx =(rey->x > p->x) ? 1: -1;
-    } else {
-        dy =(rey->y > p->y) ? 1: -1;
+    if(p->x == rey->x){
+        dy = (rey->y > p->y) ? 1: -1;
     }
-    if(rey->x != p->x && rey->y != p->y){
-        dx =(rey->x > p->x) ? 1: -1;
-        dy =(rey->y > p->y) ? 1: -1;
+    else if(p->y == rey->y){
+        dx = (rey->x > p->x) ? 1: -1;
     }
-    int nx = p->x + dx;
-    int ny = p->y + dy;
-    if(nx<0||nx>=t->W||ny<0||ny>=t->H) return;
-    if(t->celdas[ny][nx] == NULL || (nx==rey->x && ny==rey->y)){
-        t->celdas[p->y][p->x] = NULL;
-        p->x =nx;
-        p->y =ny;
-        t->celdas[ny][nx] = (void*) p;
+    else{
+        dx = (rey->x > p->x) ? 1: -1;
+        dy = (rey->y > p->y) ? 1: -1;
+    }
+    for(int i=1; i<=4; i++){
+        int nx =p->x + dx*i;
+        int ny =p->y + dy*i;
+        if(nx<0 || nx>=t->W || ny<0 || ny>=t->H) break;
+        if(t->celdas[ny][nx] != NULL){
+            Pieza *ocupante = (Pieza*) t->celdas[ny][nx];
+            if(ocupante->tipo != 'R'){
+                break;
+            }
+        }
+        t->celdas[p->y][p->x] =NULL;
+        p->x = nx;
+        p->y = ny;
+        t->celdas[ny][nx] = p;
+
+        if(nx == rey->x && ny == rey->y) break;
     }
 }
 
