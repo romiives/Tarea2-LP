@@ -134,6 +134,7 @@ int main() {
         //estado del rey
         if(verificar_estado_rey(j)){
             printf("El rey ha muerto\n");
+            j->t->celdas[j->jugador->y][j->jugador->x] = NULL;
             break;
         }
 
