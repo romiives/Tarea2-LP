@@ -108,7 +108,7 @@ int main() {
             if (letra == 's') ny++;
             if (letra == 'a') nx--;
             if (letra == 'd') nx++;
-            if (letra == 'q'){nx--; nx--;}
+            if (letra == 'q'){nx--; ny--;}
             if (letra == 'e'){nx++; ny--;}
             if (letra == 'z'){nx--; ny++;}
             if (letra == 'c'){nx++; ny++;}
@@ -145,7 +145,6 @@ int main() {
 
     }
     tablero_liberar(j->t);
-    free(j->jugador);
     free(j);
     printf("Juego Terminado\n");
     return 0;
