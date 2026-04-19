@@ -3,6 +3,13 @@
 #include <time.h>
 #include "main.h"
 
+void imprimir_linea(Tablero *t){
+    int ancho = t->W *3 +6;
+    for(int i =0; i < ancho; i++){
+        printf("=";)
+    }
+    printf("\n");
+}
 /* 
 ***
 Parametro 1: Juego*
@@ -12,7 +19,7 @@ Tipo de Retorno: None
 Imprime en pantalla la interfaz del juego mostrando nivel actual, los enemigos restantes y el estado del arsenal.
 */
 void imprimir_interfaz(Juego *j){
-    printf("\n===================================================\n");
+    imprimir_linea(j->t);
     if(j->nivel_actual == 1){
         printf("Nivel: 1 | Enemigos restantes: %d\n", j->turno_enemigos);
     }
@@ -35,7 +42,7 @@ void imprimir_interfaz(Juego *j){
     printf("[4] Especial (%d/%d)  ",
         j->arsenal.municion_actual[3],
         j->arsenal.municion_maxima[3]);
-    printf("===================================================\n\n");
+    imprimir_linea(j->t);
     printf("ACCIONES\n");
     printf("Disparo: [1-4]\n");          
     printf("Movimiento:\n");
@@ -54,11 +61,11 @@ Avanza el juego al siguiente nivel, liberando el tablero actual, creando uni nue
 */
 
 void avanzar_de_nivel(Juego *j){
-    printf("\n====================================\n");
+    imprimir_linea(j->t);
     printf("Nivel %d COMPLETADO!\n", j->nivel_actual);
     printf("El rey avanza al siguiente nivel\n");
     printf("Recuperando municion total\n");
-    printf("\n====================================\n");
+    imprimir_linea(j->t);
     j->nivel_actual++;
     if(j->nivel_actual >3){
         printf("GANASTE EL JUEGO\n");

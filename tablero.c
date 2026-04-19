@@ -82,7 +82,7 @@ void tablero_con_disparo(Tablero *t, int disparo[t->H][t->W]){
         printf("\n");
     }
     printf("   ");
-    for(int j=1;j<=t->W;j++) printf("%d", j);
+    for(int j=1;j<=t->W;j++) printf(" %2d", j);
     printf("\n");
 }
 
