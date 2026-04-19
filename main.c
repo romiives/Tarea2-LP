@@ -113,6 +113,10 @@ int main() {
             if (letra == 'z'){nx--; ny++;}
             if (letra == 'c'){nx++; ny++;}
             if(nx >=0 && nx < j->t->W && ny >= 0 && ny < j->t->H){
+                if(j->t->celdas[ny][nx] != NULL){
+                    printf("Movimiento invalido (celda ocupada)\n");
+                    continure;
+                }
                 j->t->celdas[j->jugador->y][j->jugador->x] = NULL;
                 j->jugador->x = nx;
                 j->jugador->y = ny;
