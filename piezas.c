@@ -130,81 +130,98 @@ void mover_caballo(Tablero *t, Pieza *p, Pieza *rey){
 }
 
 void mover_alfil(Tablero *t, Pieza *p, Pieza *rey){
-    int dx = (rey->x > p->x) ? 1: -1;
-    int dy = (rey->y > p->y) ? 1: -1;
-    for(int i =1; i<=3; i++){
-        int nx = p->x + dx;
-        int ny = p->y + dy;
+    int dx = (rey->x> p->x) ? 1 : -1;
+    int dy = (rey->y> p->y) ? 1 : -1;
+    for(int i=1; i<=3; i++){
+        int nx =p->x + dx*i;
+        int ny =p->y + dy*i;
         if(nx<0||nx>=t->W||ny<0||ny>=t->H) break;
-        if(nx == rey->x && ny == rey->y){
-            printf("El rey ha muerto\n");
-            exit(0);
+        if(nx ==rey->x && ny ==rey->y){
+            t->celdas[p->y][p->x] = NULL;
+            p->x = nx;
+            p->y = ny;
+            t->celdas[ny][nx] = p;
+            return;
         }
-        if(t->celdas[ny][nx] != NULL){
-                break;
-        }
-        t->celdas[p->y][p->x] = NULL;
-        p->x = nx;
-        p->y = ny;
-        t->celdas[ny][nx] = (void*) p;
+        if(t->celdas[ny][nx] != NULL) break;
+    }
+    int nx=p->x + dx;
+    int ny=p->y + dy;
+    if(nx>=0 && nx<t->W && ny>=0 && ny<t->H && t->celdas[ny][nx]==NULL){
+        t->celdas[p->y][p->x] =NULL;
+        p->x =nx;
+        p->y =ny;
+        t->celdas[ny][nx] =p;
     }
 }
 
-
 void mover_torre(Tablero *t, Pieza *p, Pieza *rey, int turno){
-    if(turno % 2 != 0) return;
+    if(turno % 2 !=0) return;
     int dx =0, dy =0;
     if(abs(rey->x - p->x) > abs(rey->y - p->y)){
-        dx =(rey->x > p->x) ? 1: -1;
+        dx =(rey->x > p->x) ? 1 : -1;
     } else {
-        dy =(rey->y > p->y) ? 1: -1;
+        dy =(rey->y > p->y) ? 1 : -1;
     }
-    for(int i= 1; i<=3; i++){
-        int nx = p->x + dx*i;
-        int ny = p->y + dy*i;
+    for(int i=1; i<=3; i++){
+        int nx =p->x + dx*i;
+        int ny =p->y + dy*i;
         if(nx<0||nx>=t->W||ny<0||ny>=t->H) break;
-        if(nx == rey->x && ny == rey->y){
-            printf("El rey ha muerto\n");
-            exit(0);
+        if(nx ==rey->x && ny ==rey->y){
+            t->celdas[p->y][p->x] = NULL;
+            p->x =nx;
+            p->y =ny;
+            t->celdas[ny][nx] = p;
+            return;
         }
-
-        if(t->celdas[ny][nx] != NULL){
-            break;
-        }
+        if(t->celdas[ny][nx] != NULL) break;
+    }
+    int nx =p->x + dx;
+    int ny =p->y + dy;
+    if(nx>=0 && nx<t->W && ny>=0 && ny<t->H && t->celdas[ny][nx]==NULL){
         t->celdas[p->y][p->x] = NULL;
-        p->x = nx;
+        p->x =nx;
         p->y =ny;
-        t->celdas[ny][nx] = (void*) p;
-        if(nx==rey->x && ny== rey->y) break;
+        t->celdas[ny][nx] = p;
     }
 }
 
 void mover_reina(Tablero *t, Pieza *p, Pieza *rey){
-    int dx = 0, dy = 0;
-    if(p->x == rey->x){
-        dy = (rey->y > p->y) ? 1: -1;
+    int dx =0, dy =0;
+    if(p->x ==rey->x){
+        dy =(rey->y > p->y) ? 1 :-1;
     }
-    else if(p->y == rey->y){
-        dx = (rey->x > p->x) ? 1: -1;
+    else if(p->y ==rey->y){
+        dx =(rey->x >p->x) ? 1 :-1;
     }
     else{
-        dx = (rey->x > p->x) ? 1: -1;
-        dy = (rey->y > p->y) ? 1: -1;
+        dx =(rey->x > p->x) ? 1 :-1;
+        dy =(rey->y > p->y) ? 1 :-1;
     }
     for(int i=1; i<=4; i++){
         int nx =p->x + dx*i;
         int ny =p->y + dy*i;
+
         if(nx<0 || nx>=t->W || ny<0 || ny>=t->H) break;
+
         if(nx == rey->x && ny == rey->y){
-            printf("El rey ha muerto\n");
-            exit(0);
+            t->celdas[p->y][p->x] = NULL;
+            p->x =nx;
+            p->y =ny;
+            t->celdas[ny][nx] = p;
+            return;
         }
-        if(t->celdas[ny][nx] != NULL){
-                break;
-        }
-        t->celdas[p->y][p->x] =NULL;
-        p->x = nx;
-        p->y = ny;
+
+        if(t->celdas[ny][nx] != NULL) break;
+    }
+
+    int nx =p->x + dx;
+    int ny =p->y + dy;
+
+    if(nx>=0 && nx<t->W && ny>=0 && ny<t->H && t->celdas[ny][nx]==NULL){
+        t->celdas[p->y][p->x] = NULL;
+        p->x =nx;
+        p->y =ny;
         t->celdas[ny][nx] = p;
     }
 }
