@@ -75,7 +75,7 @@ void mover_peon(Tablero *t, Pieza *peon, Pieza *rey){
     //limites
     if(nx <0 || nx>= t->W || ny <0 || ny>= t->H)return;
     //no se mueve si no es el rey
-    if(t->celdas[ny][nx] == NULL){
+    if(t->celdas[ny][nx] != NULL){
         Pieza *p =(Pieza*) t->celdas[ny][nx];
         if(p->tipo != 'R') return;
     }
@@ -173,7 +173,7 @@ void mover_enemigos(struct Juego *j){
         for(int x=0; x<j->t->W; x++){
             if(j->t->celdas[y][x] == NULL) continue;
             Pieza *p = (Pieza*) j->t->celdas[y][x];
-            if(p->tipo == 'R'){
+            if(p->tipo != 'R'){
                 lista[n++] = p;
             }
         }
