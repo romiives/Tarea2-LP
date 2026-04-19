@@ -4,12 +4,12 @@
 #include "main.h"
 
 //interfaz
-void imprimir_interfaz(int nivel, int enemigos){
+void imprimir_interfaz(Juego *j){
     printf("\n===================================================\n");
-    printf("Nivel: %d | Enemigos restantes: %d\n", nivel, enemigos);
-    printf("Arsenal: [1] Escopeta [2] Sniper [3] Granada [4] Especial\n");
-    printf("=============================================\n\n");
-    printf("ACCIONES DISPONIBLES\n");
+    printf("Nivel: %d | Enemigos: %d\n", j->nivel_actual, j->turno_enemigos);
+    printf("Arsenal: [1] Escopeta (%d) [2] Sniper (%d) [3] Granada (%d) [4] Especial (%d)\n", j->arsenal.municion_actual[0],j->arsenal.municion_actual[1], j->arsenal.municion_actual[2], j->arsenal.municion_actual[3]);
+    printf("===================================================\n\n");
+    printf("ACCIONES\n");
     printf("Disparo: [1-4]\n");
     printf("Movimiento:\n");
     printf("[Q][W][E]\n");
@@ -17,17 +17,31 @@ void imprimir_interfaz(int nivel, int enemigos){
     printf("[Z][S][C]\n\n");
 
 }
+void avanzar_de_nivel(Juego *j){
+    j->nivel_actual++;
+    if(j->nivel_actual >3){
+        printf("GANASTE EL JUEGO\n");
+        exit(0);
+    }
+    tablero_liberar(j->t);
+    if(j->nivel_actual == 2) j->t = tablero_crear(8,8);
+    if(j->nivel_actual == 3) j->t = tablero_crear(6,6);
+    j->jugador = crear_rey(j->t);
+    for(int i=0;i<4;i++){
+        j->arsenal.municion_actual[i] = j->arsenal.municion_maxima[i];
+    }
+    spawn_nivel(j, j->nivel_actual);
+}
 
 int main() {
     srand(time(NULL));
 
     Juego *j = malloc(sizeof(Juego));
     j->t = tablero_crear(12,12);
-    j->jugador = crear_rey(j->t);
-    Pieza *peon = crear_peon(j->t);
     j->nivel_actual = 1;
     j->turno_enemigos = 0;
-    
+    j->jugador = crear_rey(j->t);
+
     //armas
     j->arsenal.disparar[0] = escopeta;
     j->arsenal.disparar[1] = francotirador;
@@ -42,12 +56,13 @@ int main() {
     for(int i=0; i<4;i++){
         j->arsenal.municion_actual[i] = j->arsenal.municion_maxima[i];
     }
+    spawn_nivel(j,1);
 
     //movimientos 
     char letra;
     
     while(1){
-        imprimir_interfaz(j->nivel_actual, 1);
+        imprimir_interfaz(j);
         tablero_imprimir(j->t);
         printf("\n> Ingrese accion: ");
         scanf(" %c", &letra);
@@ -75,6 +90,11 @@ int main() {
             if (direccion == 'e'){dx = 1; dy = -1;}
             if (direccion == 'z'){dx = -1; dy = 1;}
             if (direccion == 'c'){dx = 1; dy = 1;}
+            if(dx==0 && dy==0){
+                printf("Direccion invalida\n");
+                continue;
+            }
+
             j->arsenal.disparar[arma](j,dx, dy);
             j->arsenal.municion_actual[arma]--;
             accion_valida = 1;
@@ -96,7 +116,7 @@ int main() {
                 j->t->celdas[j->jugador->y][j->jugador->x] = NULL;
                 j->jugador->x = nx;
                 j->jugador->y = ny;
-                j->t->celdas[ny][nx] = j->jugador;
+                j->t->celdas[ny][nx] = (void*) j->jugador;
                 if(j->arsenal.municion_actual[0] < j->arsenal.municion_maxima[0]){
                     j->arsenal.municion_actual[0]++;
                 }
@@ -107,20 +127,25 @@ int main() {
             printf("Accion Invalida\n");
             continue;
         }
-        
-        //mov del pein
-        mover_peon(j->t, peon, j->jugador);
 
-        //peon choca con rey
-        if (peon->x == j->jugador->x && peon->y == j->jugador->y){
-            printf("El rey ha sido alcanzado\n");
-            j->t->celdas[j->jugador->y][j->jugador->x] = NULL;
+        //enemigos 
+        mover_enemigos(j);
+
+        //estado del rey
+        if(verificar_estado_rey(j)){
+            printf("El rey ha muerto\n");
             break;
         }
+
+        //vicorias
+        if(j->turno_enemigos <=0){
+            printf("Nivel completado exitosamente\n");
+            avanzar_de_nivel(j);
+        }
+
     }
-    free(peon);
-    free(j->jugador);
     tablero_liberar(j->t);
+    free(j->jugador);
     free(j);
     printf("Juego Terminado\n");
     return 0;
