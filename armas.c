@@ -120,6 +120,7 @@ bool granada(struct Juego *j, int target_x, int target_y){
     tablero_con_disparo(j->t, disparo);
     return true;
 }
+
 bool especial(struct Juego *j, int dir_x, int dir_y){
     int disparo[20][20] = {0};
     int x = j->jugador->x;
@@ -135,6 +136,13 @@ bool especial(struct Juego *j, int dir_x, int dir_y){
             if(p->tipo != 'R'){
                 p->hp -= 1;
                 printf("Pulso golpea a %c en (%d,%d) HP:%d\n", p->tipo, nx, ny, p->hp);
+                if(p->hp <= 0){
+                    free(p);
+                    j->t->celdas[ny][nx] = NULL;
+                    j->turno_enemigos--;
+                    printf("Enemigo eliminado\n");
+                    continue; 
+                }
                 int emp_x=nx + dir_x;
                 int emp_y=ny + dir_y;
                 if(emp_x>=0 && emp_x<j->t->W && emp_y>=0 && emp_y<j->t->H){
@@ -149,12 +157,6 @@ bool especial(struct Juego *j, int dir_x, int dir_y){
                         j->turno_enemigos--;
                         printf("Enemigo destruido\n");
                     }
-                }
-                if(p->hp <= 0){
-                    free(p);
-                    j->t->celdas[ny][nx] = NULL;
-                    j->turno_enemigos--;
-                    printf("Enemigo eliminado\n");
                 }
             }
         }

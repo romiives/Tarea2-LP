@@ -21,7 +21,7 @@ Tablero* tablero_crear(int ancho, int alto) {
 
 void tablero_imprimir(Tablero *t) {
     for (int i=0; i<t->H; i++) {
-        printf("%2d", t->H - 1);
+        printf("%2d", t->H - i);
         for (int j=0; j<t->W;j++) {
             if(t->celdas[i][j] == NULL) {
                 printf("[ ]");
@@ -34,7 +34,7 @@ void tablero_imprimir(Tablero *t) {
     }
     printf("   ");
     for (int j=1;j<=t->W;j++){
-        printf("%d", j);
+        printf(" 2%d", j);
     }
     printf("\n");
 }
