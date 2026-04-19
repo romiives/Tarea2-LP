@@ -22,7 +22,7 @@ bool escopeta(struct Juego *j, int dir_x, int dir_y){
                 impacto_x = nx;
                 impacto_y = ny;
                 p->hp -= 2;
-                printf("Impacto a %c en (%d,%d) HP:%d\n", p->tipo, nx, ny, p->hp);
+                printf("Impacto a %c en (%d,%d) | HP restante: %d\n", p->tipo, nx, ny, p->hp);
                 if(p->hp <=0){
                     free(p);
                     j->t->celdas[ny][nx] = NULL;
@@ -43,7 +43,7 @@ bool escopeta(struct Juego *j, int dir_x, int dir_y){
                 Pieza *p = (Pieza*) j->t->celdas[by][bx];
                 if(p->tipo != 'R'){
                     p->hp -=1;
-                    printf("Impacto detras a %c en (%d,%d) HP:%d\n", p->tipo, bx, by, p->hp);
+                    printf("Impacto detras a %c en (%d,%d) | HP restante: %d\n", p->tipo, bx, by, p->hp);
                     if(p->hp <= 0){
                         free(p);
                         j->t->celdas[by][bx] =NULL;
@@ -72,7 +72,7 @@ bool francotirador(struct Juego *j, int dir_x, int dir_y){
             Pieza *p =(Pieza*) j->t->celdas[y][x];
             if(p->tipo != 'R'){
                 p->hp -=3;
-                printf("Impacto frnacotirador a %c en (%d,%d) HP:%d\n", p->tipo, x, y, p->hp);
+                printf("Impacto frnacotirador a %c en (%d,%d) | HP restante:%d\n", p->tipo, x, y, p->hp);
                 if(p->hp <= 0){
                     free(p);
                     j->t->celdas[y][x] = NULL;
@@ -106,7 +106,7 @@ bool granada(struct Juego *j, int target_x, int target_y){
                 Pieza *p=(Pieza*) j->t->celdas[y][x];
                 if(p->tipo != 'R'){
                     p->hp -=2;
-                    printf("Explosion golpea a %c en (%d,%d) HP:%d\n", p->tipo, x, y, p->hp);
+                    printf("Explosion golpea a %c en (%d,%d) | HP restante:%d\n", p->tipo, x, y, p->hp);
                     if(p->hp <=0){
                         free(p);
                         j->t->celdas[y][x] = NULL;
@@ -135,7 +135,7 @@ bool especial(struct Juego *j, int dir_x, int dir_y){
             Pieza *p = (Pieza*) j->t->celdas[ny][nx];
             if(p->tipo != 'R'){
                 p->hp -= 1;
-                printf("Pulso golpea a %c en (%d,%d) HP:%d\n", p->tipo, nx, ny, p->hp);
+                printf("Pulso golpea a %c en (%d,%d) | HP restante: %d\n", p->tipo, nx, ny, p->hp);
                 if(p->hp <= 0){
                     free(p);
                     j->t->celdas[ny][nx] = NULL;

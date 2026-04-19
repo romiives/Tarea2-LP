@@ -27,7 +27,7 @@ void tablero_imprimir(Tablero *t) {
                 printf("[ ]");
             } else {
                 Pieza *p = (Pieza*) t->celdas[i][j];
-                printf("[%c%d]", p->tipo, p->hp);
+                printf("[%c]", p->tipo);
             }
         }
         printf("\n");
