@@ -42,7 +42,7 @@ void imprimir_interfaz(Juego *j){
     printf("[4] Especial (%d/%d)  ",
         j->arsenal.municion_actual[3],
         j->arsenal.municion_maxima[3]);
-    print("\n");
+    printf("\n");
     imprimir_linea(j->t);
     printf("ACCIONES\n");
     printf("Disparo: [1-4]\n");          
