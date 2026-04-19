@@ -4,7 +4,15 @@
 #include <stdio.h>
 #include "piezas.h"
 
-
+/*
+***
+Parametro 1: int
+Parametro 2: int
+***
+Tipo de Retorno: Tablero*
+***
+Crea un tablero dinamico detamño y ancho inicializado en null.
+*/
 Tablero* tablero_crear(int ancho, int alto) {
     Tablero *t = malloc(sizeof(Tablero));
     t->W = ancho;
@@ -19,6 +27,14 @@ Tablero* tablero_crear(int ancho, int alto) {
     return t;
 }
 
+/*
+***
+Parametro 1: Tablero*
+***
+Tipo de Retorno: None
+***
+Imprime el tablero mostrando las piezas en sus posiciones.
+*/
 void tablero_imprimir(Tablero *t) {
     for (int i=0; i<t->H; i++) {
         printf("%2d ", t->H - i);
@@ -39,7 +55,16 @@ void tablero_imprimir(Tablero *t) {
     printf("\n");
 }
 
-void tablero_con_disparo(Tablero *t, int disparo[20][20]){
+/*
+***
+Parametro 1: Tablero*
+Parametro 2: int
+***
+Tipo de Retorno: None
+***
+Imprime tablero con las posiciones afectadas por las armas.
+*/
+void tablero_con_disparo(Tablero *t, int disparo[t->H][t->W]){
     for(int i=0;i<t->H;i++){
         printf("%2d", t->H -i);
         for(int j=0;j<t->W;j++){
@@ -61,8 +86,22 @@ void tablero_con_disparo(Tablero *t, int disparo[20][20]){
     printf("\n");
 }
 
+/*
+***
+Parametro 1: Tablero*
+***
+Tipo de Retorno: None
+***
+Libera toda la memoria del tablero incluyendo piezas y las estructuras.
+*/
 void tablero_liberar(Tablero *t) {
     for(int i=0; i<t->H; i++){
+        for(int j=0; j<t->W; j++){
+            if(t->celdas[i][j] != NULL){
+                free(t->celdas[i][j]);
+                t->celdas[i][j] = NULL;
+            }
+        }
         free(t->celdas[i]);
     }
     free(t->celdas);

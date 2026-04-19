@@ -105,10 +105,8 @@ int main() {
         j->arsenal.municion_actual[i] = j->arsenal.municion_maxima[i];
     }
     spawn_nivel(j,1);
-
     //movimientos 
     char letra;
-    
     while(1){
         imprimir_interfaz(j);
         tablero_imprimir(j->t);
