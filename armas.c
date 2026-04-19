@@ -3,19 +3,21 @@
 #include "armas.h"
 #include "main.h"
 
-bool escopeta(struct Juego *j, int dx, int dy){
+bool escopeta(struct Juego *j, int dir_x, int dir_y){
+    int disparo[20][20] = {0};
     int x = j->jugador->x;
     int y = j->jugador->y;
-    printf("Escopeta dispara en (%d,%d)\n", dx, dy);
+    printf("Escopeta dispara en (%d,%d)\n", dir_x, dir_y);
     for(int i=1; i<=3;i++){
-        int bx = x + dx*i;
-        int by = y + dy*i;
+        int bx = x + dir_x*i;
+        int by = y + dir_y*i;
         for(int lado=-1; lado<=1; lado++){
             int ex = bx;
             int ey = by;
-            if(dx !=0) ey += lado;
-            if(dy !=0) ex += lado;
+            if(dir_x !=0) ey += lado;
+            if(dir_y !=0) ex += lado;
             if(ex<0 || ex>=j->t->W || ey<0 || ey>=j->t->H) continue;
+            disparo[ey][ex] =1;
             if (j->t->celdas[ey][ex] != NULL){
                 Pieza *p =(Pieza*) j->t->celdas[ey][ex];
                 if(p->tipo != 'R'){
@@ -32,17 +34,20 @@ bool escopeta(struct Juego *j, int dx, int dy){
             }
         }
     }
+    tablero_con_disparo(j->t, disparo); 
     return true;
 }
 
-bool francotirador(struct Juego *j, int dx, int dy){
+bool francotirador(struct Juego *j, int dir_x, int dir_y){
+    int disparo[20][20] = {0};
     int x = j->jugador->x;
     int y = j->jugador->y;
-    printf("Sniper disparado en direccion (%d,%d)\n", dx, dy);
+    printf("Sniper disparado en direccion (%d,%d)\n", dir_x, dir_y);
     while(1){
-        x +=dx;
-        y +=dy;
+        x +=dir_x;
+        y +=dir_y;
         if(x<0 || x>=j->t->W || y<0 || y>=j->t->H) break;
+        disparo[y][x] = 1;
         if (j->t->celdas[y][x] != NULL){
             Pieza *p =(Pieza*) j->t->celdas[y][x];
             if(p->tipo != 'R'){
@@ -58,12 +63,14 @@ bool francotirador(struct Juego *j, int dx, int dy){
             break;
         }
     }
+    tablero_con_disparo(j->t, disparo);
     return true;
 }
 
-bool granada(struct Juego *j, int x, int y){
-    int gx = j->jugador->x + x*3;
-    int gy = j->jugador->y + y*3;
+bool granada(struct Juego *j, int target_x, int target_y){
+    int disparo[20][20] = {0};
+    int gx = j->jugador->x + target_x*3;
+    int gy = j->jugador->y + target_y*3;
     printf("Granada lanzada hacia (%d,%d)\n", gx, gy);
     for(int i=-1; i<=1; i++){
         for(int k=-1; k<=1; k++){
@@ -85,12 +92,13 @@ bool granada(struct Juego *j, int x, int y){
             }
         }
     }
+    tablero_con_disparo(j->t, disparo);
     return true;
 }
-bool especial(struct Juego *j, int dx, int dy){
+bool especial(struct Juego *j, int dir_x, int dir_y){
     printf("Arma Especial\n");
     (void)j;
-    (void)dx;
-    (void)dy;
+    (void)dir_x;
+    (void)dir_y;
     return true;
 }
