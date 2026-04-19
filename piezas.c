@@ -162,30 +162,33 @@ void mover_reina(Tablero *t, Pieza *p, Pieza *rey){
 }
 
 void mover_enemigos(struct Juego *j){
+    Pieza *lista[200];
+    int n=0;
     for(int y=0; y<j->t->H; y++){
         for(int x=0; x<j->t->W; x++){
             if(j->t->celdas[y][x] == NULL) continue;
             Pieza *p = (Pieza*) j->t->celdas[y][x];
-            if(p->tipo == 'R') continue;
-            if(p->tipo == 'P') mover_peon(j->t, p, j->jugador);
-            if(p->tipo == 'C') mover_caballo(j->t, p, j->jugador);
-            if(p->tipo == 'A') mover_alfil(j->t, p, j->jugador);
-            if(p->tipo == 'T') mover_torre(j->t, p, j->jugador, j->turno_enemigos);
-            if(p->tipo == 'Q') mover_reina(j->t, p, j->jugador);
+            if(p->tipo == 'R'){
+                lista[n++] = p;
+            }
         }
+    }
+    for(int i=0; i<n; i++){
+        Pieza *p = lista[i];
+        if(p->tipo == 'P') mover_peon(j->t, p, j->jugador);
+        if(p->tipo == 'C') mover_caballo(j->t, p, j->jugador);
+        if(p->tipo == 'A') mover_alfil(j->t, p, j->jugador);
+        if(p->tipo == 'T') mover_torre(j->t, p, j->jugador, j->turno_enemigos);
+        if(p->tipo == 'Q') mover_reina(j->t, p, j->jugador);
     }
 }
 
 bool verificar_estado_rey(struct Juego *j){
-    for(int y=0; y<j->t->H; y++){
-        for(int x=0; x<j->t->W; x++){
-            if(j->t->celdas[y][x] == NULL) continue;
-            Pieza *p = (Pieza*) j->t->celdas[y][x];
-            if(p->tipo == 'R') continue;
-            if(p->x == j->jugador->x && p->y == j->jugador->y){
-                return true;
-            }
-        }
+    void *celda = j->t->celdas[j->jugador->y][j->jugador->x];
+    if(celda == NULL) return false;
+    Pieza *p = (Pieza*) celda;
+    if(p->tipo != 'R'){
+        return true;
     }
     return false;
 }
