@@ -122,7 +122,7 @@ bool granada(struct Juego *j, int target_x, int target_y){
 }
 bool especial(struct Juego *j, int dir_x, int dir_y){
     int disparo[20][20] = {0};
-    int x=j->jugador->x;
+    int x = j->jugador->x;
     int y = j->jugador->y;
     printf("Pulso Real en (%d,%d)\n", dir_x, dir_y);
     for(int i=1; i<=3; i++){
@@ -132,12 +132,11 @@ bool especial(struct Juego *j, int dir_x, int dir_y){
         disparo[ny][nx] =1;
         if(j->t->celdas[ny][nx] !=NULL){
             Pieza *p = (Pieza*) j->t->celdas[ny][nx];
-            if(p->tipo != 'R')
+            if(p->tipo != 'R'){
                 p->hp -= 1;
                 printf("Pulso golpea a %c en (%d,%d) HP:%d\n", p->tipo, nx, ny, p->hp);
                 int emp_x=nx + dir_x;
                 int emp_y=ny + dir_y;
-
                 if(emp_x>=0 && emp_x<j->t->W && emp_y>=0 && emp_y<j->t->H){
                     if(j->t->celdas[emp_y][emp_x] == NULL){
                         j->t->celdas[ny][nx] = NULL;
@@ -146,9 +145,9 @@ bool especial(struct Juego *j, int dir_x, int dir_y){
                         j->t->celdas[emp_y][emp_x] =p;
                     } else {
                         free(p);
-                        j->t->celdas[ny][nx] = NULL;
+                        j->t->celdas[ny][nx] =NULL;
                         j->turno_enemigos--;
-                        printf("Enemigo destruido por impacto\n");
+                        printf("Enemigo destruido\n");
                     }
                 }
                 if(p->hp <= 0){
