@@ -8,6 +8,7 @@ typedef struct {
 
 Tablero* tablero_crear(int ancho, int alto);
 void tablero_imprimir(Tablero *tablero);
+void tablero_con_disparo(Tablero *t, int disparo[20][20]);
 void tablero_liberar(Tablero *tablero); /* debe limpiar la memoria heap */
 
 #endif 

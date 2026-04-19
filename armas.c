@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "armas.h"
 #include "main.h"
+#include "tablero.h"
 
 bool escopeta(struct Juego *j, int dir_x, int dir_y){
     int disparo[20][20] = {0};
