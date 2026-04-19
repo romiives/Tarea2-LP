@@ -14,8 +14,10 @@ Creación de Arma especial: "Pulso Real"
 6. Se verifica condicón de derrota o victoria.
 
 -> la derrota significa la muerte del rey.
+-> para salir del juego hay que ingresar la letra x, si el rey muere el juego se termina automaticamente y para volver a inicializarlo se debe de ejecutar ./juego
 
 ## Sobre la compilacion
 el juego fue compilado y ejecutado con el siguiente comando:
 gcc -Wall -Wextra -Werror main.c tablero.c piezas.c armas.c -o juego
 ./juego
+- tambien se puede ejcutar con make y luego ./juego
