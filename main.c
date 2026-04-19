@@ -115,7 +115,7 @@ int main() {
             if(nx >=0 && nx < j->t->W && ny >= 0 && ny < j->t->H){
                 if(j->t->celdas[ny][nx] != NULL){
                     printf("Movimiento invalido (celda ocupada)\n");
-                    continure;
+                    continue;
                 }
                 j->t->celdas[j->jugador->y][j->jugador->x] = NULL;
                 j->jugador->x = nx;
