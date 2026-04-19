@@ -3,7 +3,14 @@
 #include <time.h>
 #include "main.h"
 
-//interfaz
+/* 
+***
+Parametro 1: Juego*
+***
+Tipo de Retorno: None
+***
+Imprime en pantalla la interfaz del juego mostrando nivel actual, los enemigos restantes y el estado del arsenal.
+*/
 void imprimir_interfaz(Juego *j){
     printf("\n===================================================\n");
     if(j->nivel_actual == 1){
@@ -16,16 +23,16 @@ void imprimir_interfaz(Juego *j){
         printf("Nivel: 3 | Enemigos restantes: %d\n", j->turno_enemigos);
     }
     printf("Arsenal:\n");
-    printf("[1] Escopeta (%d/%d)   ",
+    printf("[1] Escopeta (%d/%d)  ",
         j->arsenal.municion_actual[0],
         j->arsenal.municion_maxima[0]);
-    printf("[2] Sniper (%d/%d)   ",
+    printf("[2] Sniper (%d/%d)  ",
         j->arsenal.municion_actual[1],
         j->arsenal.municion_maxima[1]);
-    printf("[3] Granada (%d/%d)   ",
+    printf("[3] Granada (%d/%d)  ",
         j->arsenal.municion_actual[2],
         j->arsenal.municion_maxima[2]);
-    printf("[4] Especial (%d/%d)   ",
+    printf("[4] Especial (%d/%d)  ",
         j->arsenal.municion_actual[3],
         j->arsenal.municion_maxima[3]);
     printf("===================================================\n\n");
@@ -37,6 +44,15 @@ void imprimir_interfaz(Juego *j){
     printf("[Z][S][C]\n\n");
 
 }
+/* 
+***
+Parametro 1: Juego*
+***
+Tipo de Retorno: None
+***
+Avanza el juego al siguiente nivel, liberando el tablero actual, creando uni nuevo según el nivel coorespondiente y reinicia la munición como tambien genera los enemigos por tablero.
+*/
+
 void avanzar_de_nivel(Juego *j){
     printf("\n====================================\n");
     printf("Nivel %d COMPLETADO!\n", j->nivel_actual);
@@ -58,15 +74,22 @@ void avanzar_de_nivel(Juego *j){
     spawn_nivel(j, j->nivel_actual);
 }
 
+/* 
+***
+Parametro 1: None
+***
+Tipo de Retorno: int
+***
+Funcion principal, la cual inicializa el juego controla el ciclo de turnos , gestiona las entradas del usuario, moviminetos, disparos y las condiciones necesarias de victoria y derrota.
+*/
 int main() {
     srand(time(NULL));
-
     Juego *j = malloc(sizeof(Juego));
     j->t = tablero_crear(12,12);
     j->nivel_actual = 1;
     j->turno_enemigos = 0;
+    j->turno_actual = 0;
     j->jugador = crear_rey(j->t);
-
     //armas
     j->arsenal.disparar[0] = escopeta;
     j->arsenal.disparar[1] = francotirador;
@@ -91,10 +114,8 @@ int main() {
         tablero_imprimir(j->t);
         printf("\n> Ingrese accion: ");
         scanf(" %c", &letra);
-
         //salida ddel juego
         if (letra == 'x'){ break; }
-
         int accion_valida =0;
         //armas y disparo
         if (letra >= '1' && letra <= '4'){
@@ -119,12 +140,10 @@ int main() {
                 printf("Direccion invalida\n");
                 continue;
             }
-
             j->arsenal.disparar[arma](j,dx, dy);
             j->arsenal.municion_actual[arma]--;
             accion_valida = 1;
         }
-
         //mov 
         if (letra == 'w' || letra == 'a' || letra == 's' || letra == 'd' || letra == 'q' || letra == 'e' || letra == 'z' || letra == 'c'){
             int nx = j->jugador->x;
@@ -156,21 +175,17 @@ int main() {
             printf("Accion Invalida\n");
             continue;
         }
-
         //enemigos 
         mover_enemigos(j);
-
         //estado del rey
         if(verificar_estado_rey(j)){
             break;
         }
-
         //vicorias
         if(j->turno_enemigos <=0){
             printf("Nivel completado exitosamente\n");
             avanzar_de_nivel(j);
         }
-
     }
     tablero_liberar(j->t);
     free(j);

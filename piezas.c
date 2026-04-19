@@ -5,6 +5,16 @@
 #include "main.h"
 #include <math.h>
 
+/*
+Parametro 1: Tablero*
+Parametro 2: char
+Parametro 3: int
+Parametro 4: int
+***
+Tipo de Retorno: Pieza*
+***
+Crea una pieza en una fila especifica del tablero y en una posicion aleatoria libre, cumpliendo obviamente con los requisitos de la tarea.
+*/
 Pieza* crear_en_fila(Tablero *t, char tipo, int hp, int fila){
     Pieza *p = malloc(sizeof(Pieza));
     p->tipo = tipo;
@@ -19,7 +29,13 @@ Pieza* crear_en_fila(Tablero *t, char tipo, int hp, int fila){
     return p;
 }
 
-//creacion del rey en la ultima fila
+/*
+Parametro 1: Tablero*
+***
+Tipo de Retorno: Pieza*
+***
+Crea al rey en la ultima fila del tablero, respetando los limites.
+*/
 Pieza* crear_rey(Tablero *t){
     Pieza *rey = malloc(sizeof(Pieza));
     rey->tipo = 'R';
@@ -40,7 +56,14 @@ Pieza* crear_alfil(Tablero *t){return crear_en_fila(t,'A',2,0);}
 Pieza* crear_torre(Tablero *t){return crear_en_fila(t,'T',4,0);}
 Pieza* crear_reina(Tablero *t){return crear_en_fila(t,'Q',3,0);}
 
-
+/*
+Parametro 1: Juego*
+Parametro 2: int
+***
+Tipo de Retorno: None
+***
+Genera los enemigos según cada nivel.
+*/
 void spawn_nivel(struct Juego *j, int nivel){
     if(nivel == 1){
         for(int i=0;i<4;i++) crear_peon(j->t);
@@ -63,29 +86,25 @@ void spawn_nivel(struct Juego *j, int nivel){
     }
 }
 
-//movimiento del peon hacia el rey
+/*
+Parametro 1: Tablero*t
+Parametro 2: Pieza*
+Parametro 3: Pieza*
+***
+Tipo de Retorno: None
+***
+Movimientos del peon hacia el rey.
+*/
 void mover_peon(Tablero *t, Pieza *peon, Pieza *rey){
-    int dx=0;
-    int dy=0;
-    int dif_x = rey->x - peon->x;
-    int dif_y = rey->y - peon->y;
-    if(abs(dif_x) == 1 && abs(dif_y) == 1){
-        dx = (dif_x > 0) ? 1 : -1;
-        dy = (dif_y > 0) ? 1 : -1;
-    }
-    else{
-        if(abs(dif_x) > abs(dif_y)){
-            dx = (dif_x>0) ? 1: -1;
-        } else {
-            dy = (dif_y>0) ? 1: -1;
-        }
-    }
+    int dx= (rey->x > peon->x) ? 1: -1;
+    int dy= (rey->y > peon->y) ? 1: -1;
     int nx = peon->x +dx;
     int ny = peon->y +dy;
     if(nx<0 || nx>=t->W || ny<0 || ny>=t->H) return;
     if(nx == rey->x && ny == rey->y){
-        printf("El rey ha muerto\n");
-        exit(0);
+        t->celdas[peon->y][peon->x] = NULL;
+        t->celdas[ny][nx] = peon;
+        return; 
     }
     if(t->celdas[ny][nx] != NULL) return;
     t->celdas[peon->y][peon->x] = NULL;
@@ -94,6 +113,15 @@ void mover_peon(Tablero *t, Pieza *peon, Pieza *rey){
     t->celdas[ny][nx] = peon;
 }
 
+/*
+Parametro 1: Tablero*t
+Parametro 2: Pieza*
+Parametro 3: Pieza*
+***
+Tipo de Retorno: None
+***
+Movimientos del caballo en forma de L hacia el rey.
+*/
 void mover_caballo(Tablero *t, Pieza *p, Pieza *rey){
     int movimiento[8][2] ={
         {2,1},{2,-1},{-2,1},{-2,-1},
@@ -106,7 +134,12 @@ void mover_caballo(Tablero *t, Pieza *p, Pieza *rey){
         int nx= p->x + movimiento[i][0];
         int ny= p->y + movimiento[i][1];
         if(nx<0||nx>=t->W||ny<0||ny>=t->H) continue;
-        if(t->celdas[ny][nx] != NULL && !(nx==rey->x && ny==rey->y)) continue;
+        if(nx==rey->x && ny==rey->y){
+            t->celdas[p->y][p->x]= NULL;
+            t->celdas[ny][nx] = p;
+            return;
+        }
+        if(t->celdas[ny][nx] != NULL) continue;
         int distancia = abs(nx - rey->x) + abs(ny - rey->y);
         if(distancia < mejor_dist){
             mejor_dist = distancia;
@@ -114,16 +147,22 @@ void mover_caballo(Tablero *t, Pieza *p, Pieza *rey){
             mejor_y = ny;
         }
     }
-    if(mejor_x == rey->x && mejor_y == rey->y){
-        printf("El rey ha muerto\n");
-        exit(0);
-    }
+
     t->celdas[p->y][p->x] = NULL;
     p->x = mejor_x;
     p->y = mejor_y;
     t->celdas[p->y][p->x] = p;
 }
 
+/*
+Parametro 1: Tablero*t
+Parametro 2: Pieza*
+Parametro 3: Pieza*
+***
+Tipo de Retorno: None
+***
+Movimientos del alfilen diagonal hacia el rey.
+*/
 void mover_alfil(Tablero *t, Pieza *p, Pieza *rey){
     int dx = (rey->x> p->x) ? 1 : -1;
     int dy = (rey->y> p->y) ? 1 : -1;
@@ -132,8 +171,11 @@ void mover_alfil(Tablero *t, Pieza *p, Pieza *rey){
         int ny =p->y + dy*i;
         if(nx<0||nx>=t->W||ny<0||ny>=t->H) break;
         if(nx ==rey->x && ny ==rey->y){
-            printf("El rey ha muerto\n");
-             exit(0);   
+            t->celdas[p->y][p->x] =NULL;
+            p->x =nx;
+            p->y =ny;
+            t->celdas[ny][nx] =p;
+            return;
         }
         if(t->celdas[ny][nx] != NULL) break;
     }
@@ -147,6 +189,16 @@ void mover_alfil(Tablero *t, Pieza *p, Pieza *rey){
     }
 }
 
+/*
+Parametro 1: Tablero*t
+Parametro 2: Pieza*
+Parametro 3: Pieza*
+Parametro 4: int
+***
+Tipo de Retorno: None
+***
+Movimiento de la torre cada dos turnos.
+*/
 void mover_torre(Tablero *t, Pieza *p, Pieza *rey, int turno){
     if(turno % 2 !=0) return;
     int dx =0, dy =0;
@@ -160,8 +212,11 @@ void mover_torre(Tablero *t, Pieza *p, Pieza *rey, int turno){
         int ny =p->y + dy*i;
         if(nx<0||nx>=t->W||ny<0||ny>=t->H) break;
         if(nx ==rey->x && ny ==rey->y){
-            printf("El rey ha muerto\n");
-            exit(0);
+            t->celdas[p->y][p->x] = NULL;
+            p->x =nx;
+            p->y =ny;
+            t->celdas[ny][nx] = p;
+            return;
         }
         if(t->celdas[ny][nx] != NULL) break;
     }
@@ -175,6 +230,15 @@ void mover_torre(Tablero *t, Pieza *p, Pieza *rey, int turno){
     }
 }
 
+/*
+Parametro 1: Tablero*t
+Parametro 2: Pieza*
+Parametro 3: Pieza*
+***
+Tipo de Retorno: None
+***
+Movimiento de la reina combinando los mov de torre y alfil.
+*/
 void mover_reina(Tablero *t, Pieza *p, Pieza *rey){
     int dx =0, dy =0;
     if(p->x ==rey->x){
@@ -192,8 +256,12 @@ void mover_reina(Tablero *t, Pieza *p, Pieza *rey){
         int ny =p->y + dy*i;
         if(nx<0 || nx>=t->W || ny<0 || ny>=t->H) break;
         if(nx == rey->x && ny == rey->y){
-            printf("El rey ha muerto\n");
-            exit(0);
+            t->celdas[p->y][p->x] = NULL;
+            p->x =nx;
+            p->y =ny;
+            t->celdas[ny][nx] = p;
+            return;
+            
         }
         if(t->celdas[ny][nx] != NULL) break;
     }
@@ -207,6 +275,13 @@ void mover_reina(Tablero *t, Pieza *p, Pieza *rey){
     }
 }
 
+/*
+Parametro 1: Juego 
+***
+Tipo de Retorno: None
+***
+Movimiento de todas la piezas enemigas.
+*/
 void mover_enemigos(struct Juego *j){
     Pieza *lista[200];
     int n=0;
@@ -224,14 +299,26 @@ void mover_enemigos(struct Juego *j){
         if(p->tipo == 'P') mover_peon(j->t, p, j->jugador);
         if(p->tipo == 'C') mover_caballo(j->t, p, j->jugador);
         if(p->tipo == 'A') mover_alfil(j->t, p, j->jugador);
-        if(p->tipo == 'T') mover_torre(j->t, p, j->jugador, j->turno_enemigos);
+        if(p->tipo == 'T') mover_torre(j->t, p, j->jugador, j->turno_actual);
         if(p->tipo == 'Q') mover_reina(j->t, p, j->jugador);
     }
+    j->turno_actual++;
 }
 
+/*
+Parametro 1: Juego 
+***
+Tipo de Retorno: bool
+***
+Verifica si el rey ha sido eliminado, retorna true si el jugador pierde y false si gana.
+*/
 bool verificar_estado_rey(struct Juego *j){
-    Pieza *p =j->t->celdas[j->jugador->y][j->jugador->x];
-    if(p ==NULL) return false;
+    void *celda =j->t->celdas[j->jugador->y][j->jugador->x];
+    if(celda ==NULL){
+        printf("Error celda del rey vacia\n");
+        return true;
+    }
+    Pieza *p = (Pieza*) celda;
     if(p != j->jugador){
         printf("HAS SIDO DERROTADO\n");
         printf("El rey ha sido eliminado\n");
