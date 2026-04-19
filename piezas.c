@@ -75,7 +75,7 @@ void mover_peon(Tablero *t, Pieza *peon, Pieza *rey){
     //limites
     if(nx <0 || nx>= t->W || ny <0 || ny>= t->H)return;
     //no se mueve si no es el rey
-    if(t->celdas[ny][nx] == NULL{
+    if(t->celdas[ny][nx] == NULL){
         Pieza *p =(Pieza*) t->celdas[ny][nx];
         if(p->tipo != 'R') return;
     }
