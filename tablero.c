@@ -21,20 +21,20 @@ Tablero* tablero_crear(int ancho, int alto) {
 
 void tablero_imprimir(Tablero *t) {
     for (int i=0; i<t->H; i++) {
-        printf("%2d", t->H - i);
+        printf("%2d ", t->H - i);
         for (int j=0; j<t->W;j++) {
             if(t->celdas[i][j] == NULL) {
                 printf("[ ]");
             } else {
                 Pieza *p = (Pieza*) t->celdas[i][j];
-                printf("[%c]", p->tipo);
+                printf("[%c%d]", p->tipo, p->hp);
             }
         }
         printf("\n");
     }
     printf("   ");
     for (int j=1;j<=t->W;j++){
-        printf(" 2%d", j);
+        printf(" %2d", j);
     }
     printf("\n");
 }

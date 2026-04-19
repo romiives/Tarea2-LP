@@ -6,11 +6,31 @@
 //interfaz
 void imprimir_interfaz(Juego *j){
     printf("\n===================================================\n");
-    printf("Nivel: %d | Enemigos: %d\n", j->nivel_actual, j->turno_enemigos);
-    printf("Arsenal: [1] Escopeta (%d) [2] Sniper (%d) [3] Granada (%d) [4] Especial (%d)\n", j->arsenal.municion_actual[0],j->arsenal.municion_actual[1], j->arsenal.municion_actual[2], j->arsenal.municion_actual[3]);
+    if(j->nivel_actual == 1){
+        printf("Nivel: 1 | Enemigos restantes: %d\n", j->turno_enemigos);
+    }
+    else if(j->nivel_actual ==2){
+        printf("Nivel: 2 | Enemigos restantes: %d\n", j->turno_enemigos);
+    }
+    else if(j->nivel_actual ==3){
+        printf("Nivel: 3 | Enemigos restantes: %d\n", j->turno_enemigos);
+    }
+    printf("Arsenal:\n");
+    printf("[1] Escopeta (%d/%d)   ",
+        j->arsenal.municion_actual[0],
+        j->arsenal.municion_maxima[0]);
+    printf("[2] Sniper (%d/%d)   ",
+        j->arsenal.municion_actual[1],
+        j->arsenal.municion_maxima[1]);
+    printf("[3] Granada (%d/%d)   ",
+        j->arsenal.municion_actual[2],
+        j->arsenal.municion_maxima[2]);
+    printf("[4] Especial (%d/%d)   ",
+        j->arsenal.municion_actual[3],
+        j->arsenal.municion_maxima[3]);
     printf("===================================================\n\n");
     printf("ACCIONES\n");
-    printf("Disparo: [1-4]\n");
+    printf("Disparo: [1-4]\n");          
     printf("Movimiento:\n");
     printf("[Q][W][E]\n");
     printf("[A]   [D]\n");
@@ -18,6 +38,11 @@ void imprimir_interfaz(Juego *j){
 
 }
 void avanzar_de_nivel(Juego *j){
+    printf("\n====================================\n");
+    printf("Nivel %d COMPLETADO!\n", j->nivel_actual);
+    printf("El rey avanza al siguiente nivel\n");
+    printf("Recuperando municion total\n");
+    printf("\n====================================\n");
     j->nivel_actual++;
     if(j->nivel_actual >3){
         printf("GANASTE EL JUEGO\n");
