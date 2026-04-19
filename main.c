@@ -6,7 +6,7 @@
 void imprimir_linea(Tablero *t){
     int ancho = t->W *3 +6;
     for(int i =0; i < ancho; i++){
-        printf("=";)
+        printf("=");
     }
     printf("\n");
 }
