@@ -20,8 +20,8 @@ Tablero* tablero_crear(int ancho, int alto) {
 }
 
 void tablero_imprimir(Tablero *t) {
-    for (int i=t->H - 1; i>=0; i--) {
-        printf("%2d", i + 1);
+    for (int i=0; i<t->H; i++) {
+        printf("%2d", t->H - 1);
         for (int j=0; j<t->W;j++) {
             if(t->celdas[i][j] == NULL) {
                 printf("[ ]");
