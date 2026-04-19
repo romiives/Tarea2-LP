@@ -87,16 +87,11 @@ void mover_peon(Tablero *t, Pieza *peon, Pieza *rey){
         printf("El rey ha muerto\n");
         exit(0);
     }
-    if(t->celdas[ny][nx] != NULL){
-        Pieza *p = (Pieza*) t->celdas[ny][nx];
-        if(p->tipo != 'R'){
-            return;
-        }
-    }
+    if(t->celdas[ny][nx] != NULL) return;
     t->celdas[peon->y][peon->x] = NULL;
     peon->x =nx;
     peon->y =ny;
-    t->celdas[ny][nx] = (void*) peon;
+    t->celdas[ny][nx] = peon;
 }
 
 void mover_caballo(Tablero *t, Pieza *p, Pieza *rey){
@@ -126,7 +121,7 @@ void mover_caballo(Tablero *t, Pieza *p, Pieza *rey){
     t->celdas[p->y][p->x] = NULL;
     p->x = mejor_x;
     p->y = mejor_y;
-    t->celdas[p->y][p->x] = (void*) p;
+    t->celdas[p->y][p->x] = p;
 }
 
 void mover_alfil(Tablero *t, Pieza *p, Pieza *rey){
@@ -137,11 +132,8 @@ void mover_alfil(Tablero *t, Pieza *p, Pieza *rey){
         int ny =p->y + dy*i;
         if(nx<0||nx>=t->W||ny<0||ny>=t->H) break;
         if(nx ==rey->x && ny ==rey->y){
-            t->celdas[p->y][p->x] = NULL;
-            p->x = nx;
-            p->y = ny;
-            t->celdas[ny][nx] = p;
-            return;
+            printf("El rey ha muerto\n");
+             exit(0);   
         }
         if(t->celdas[ny][nx] != NULL) break;
     }
@@ -168,11 +160,8 @@ void mover_torre(Tablero *t, Pieza *p, Pieza *rey, int turno){
         int ny =p->y + dy*i;
         if(nx<0||nx>=t->W||ny<0||ny>=t->H) break;
         if(nx ==rey->x && ny ==rey->y){
-            t->celdas[p->y][p->x] = NULL;
-            p->x =nx;
-            p->y =ny;
-            t->celdas[ny][nx] = p;
-            return;
+            printf("El rey ha muerto\n");
+            exit(0);
         }
         if(t->celdas[ny][nx] != NULL) break;
     }
@@ -201,23 +190,15 @@ void mover_reina(Tablero *t, Pieza *p, Pieza *rey){
     for(int i=1; i<=4; i++){
         int nx =p->x + dx*i;
         int ny =p->y + dy*i;
-
         if(nx<0 || nx>=t->W || ny<0 || ny>=t->H) break;
-
         if(nx == rey->x && ny == rey->y){
-            t->celdas[p->y][p->x] = NULL;
-            p->x =nx;
-            p->y =ny;
-            t->celdas[ny][nx] = p;
-            return;
+            printf("El rey ha muerto\n");
+            exit(0);
         }
-
         if(t->celdas[ny][nx] != NULL) break;
     }
-
-    int nx =p->x + dx;
-    int ny =p->y + dy;
-
+    int nx =p->x +dx;
+    int ny =p->y +dy;
     if(nx>=0 && nx<t->W && ny>=0 && ny<t->H && t->celdas[ny][nx]==NULL){
         t->celdas[p->y][p->x] = NULL;
         p->x =nx;
@@ -249,9 +230,8 @@ void mover_enemigos(struct Juego *j){
 }
 
 bool verificar_estado_rey(struct Juego *j){
-    void *celda =j->t->celdas[j->jugador->y][j->jugador->x];
-    if(celda ==NULL) return false;
-    Pieza *p =(Pieza*) celda;
+    Pieza *p =j->t->celdas[j->jugador->y][j->jugador->x];
+    if(p ==NULL) return false;
     if(p != j->jugador){
         printf("HAS SIDO DERROTADO\n");
         printf("El rey ha sido eliminado\n");
