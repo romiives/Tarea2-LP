@@ -74,7 +74,7 @@ void spawn_nivel(struct Juego *j, int nivel){
     else if(nivel == 2){
         for(int i=0;i<4;i++) crear_peon(j->t);
         for(int i=0;i<2;i++) crear_caballo(j->t);
-        for(int i=0;i<2;i++)crear_alfil(j->t);
+        for(int i=0;i<2;i++)crear_torre(j->t);
         j->turno_enemigos = 8;
     }
     else if(nivel == 3){

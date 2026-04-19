@@ -4,19 +4,31 @@
 #include "main.h"
 #include "tablero.h"
 
+/*
+**
+Parametro 1: Juego
+Parametro 2: int
+Parametro 3: int
+***
+Tipo de Retorno: bool
+***
+Disparo en cono: 2 de daño al primer enemigo y 1 a los que están detrás.
+*/
 bool escopeta(struct Juego *j, int dir_x, int dir_y){
-    int disparo[20][20] = {0};
+    int disparo[j->t->H][j->t->W];
+    for(int i=0;i<j->t->H;i++)
+        for(int k=0;k<j->t->W;k++)
+            disparo[i][k]=0;
     int x = j->jugador->x;
     int y = j->jugador->y;
     printf("Escopeta dispara en (%d,%d)\n", dir_x, dir_y);
-    int impacto_x = -1;
-    int impacto_y = -1;
+    int impacto_x = -1, impacto_y = -1;
     for(int i=1; i<=3;i++){
         int nx = x + dir_x*i;
         int ny = y + dir_y*i;
         if(nx<0 || nx>=j->t->W || ny<0 || ny>=j->t->H) break;
         disparo[ny][nx] =1;
-        if (j->t->celdas[ny][nx] != NULL){
+        if(j->t->celdas[ny][nx] != NULL){
             Pieza *p =(Pieza*) j->t->celdas[ny][nx];
             if(p->tipo != 'R'){
                 impacto_x = nx;
@@ -43,7 +55,6 @@ bool escopeta(struct Juego *j, int dir_x, int dir_y){
                 Pieza *p = (Pieza*) j->t->celdas[by][bx];
                 if(p->tipo != 'R'){
                     p->hp -=1;
-                    printf("Impacto detras a %c en (%d,%d) | HP restante: %d\n", p->tipo, bx, by, p->hp);
                     if(p->hp <= 0){
                         free(p);
                         j->t->celdas[by][bx] =NULL;
@@ -54,12 +65,25 @@ bool escopeta(struct Juego *j, int dir_x, int dir_y){
             }
         }
     }
-    tablero_con_disparo(j->t, disparo); 
+    tablero_con_disparo(j->t, disparo);
     return true;
 }
 
+/*
+**
+Parametro 1: Juego
+Parametro 2: int
+Parametro 3: int
+***
+Tipo de Retorno: bool
+***
+Disparo en linea infinita. Inflinge 3 de daño al primer enemigo.
+*/
 bool francotirador(struct Juego *j, int dir_x, int dir_y){
-    int disparo[20][20] = {0};
+    int disparo[j->t->H][j->t->W];
+    for(int i=0;i<j->t->H;i++)
+        for(int k=0;k<j->t->W;k++)
+            disparo[i][k]=0;
     int x = j->jugador->x;
     int y = j->jugador->y;
     printf("Sniper disparado en direccion (%d,%d)\n", dir_x, dir_y);
@@ -86,9 +110,21 @@ bool francotirador(struct Juego *j, int dir_x, int dir_y){
     tablero_con_disparo(j->t, disparo);
     return true;
 }
-
+/*
+**
+Parametro 1: Juego
+Parametro 2: int
+Parametro 3: int
+***
+Tipo de Retorno: bool
+***
+Explosion en un area de 3x3 a distancia 3.
+*/
 bool granada(struct Juego *j, int target_x, int target_y){
-    int disparo[20][20] = {0};
+    int disparo[j->t->H][j->t->W];
+    for(int i=0;i<j->t->H;i++)
+        for(int k=0;k<j->t->W;k++)
+            disparo[i][k]=0;
     int gx = j->jugador->x + target_x*3;
     int gy = j->jugador->y + target_y*3;
     printf("Granada lanzada hacia (%d,%d)\n", gx, gy);
@@ -121,8 +157,21 @@ bool granada(struct Juego *j, int target_x, int target_y){
     return true;
 }
 
+/*
+**
+Parametro 1: Juego
+Parametro 2: int
+Parametro 3: int
+***
+Tipo de Retorno: bool
+***
+Pulso que empuja enemigos o los elimina. 
+*/
 bool especial(struct Juego *j, int dir_x, int dir_y){
-    int disparo[20][20] = {0};
+    int disparo[j->t->H][j->t->W];
+    for(int i=0;i<j->t->H;i++)
+        for(int k=0;k<j->t->W;k++)
+            disparo[i][k]=0;
     int x = j->jugador->x;
     int y = j->jugador->y;
     printf("Pulso Real en (%d,%d)\n", dir_x, dir_y);
