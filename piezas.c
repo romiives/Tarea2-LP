@@ -65,19 +65,24 @@ void spawn_nivel(struct Juego *j, int nivel){
 //movimiento del peon hacia el rey
 void mover_peon(Tablero *t, Pieza *peon, Pieza *rey){
     int dx=0, dy=0;
+    //hacia el rey
     if(rey->x > peon->x) dx =1;
-    else if(rey->x < peon->x) dx =-1;
+    if(rey->x < peon->x) dx =-1;
     if(rey->y > peon->y) dy =1;
-    else if(rey->y < peon->y) dy =-1;
+    if(rey->y < peon->y) dy =-1;
     int nx = peon->x +dx;
     int ny = peon->y +dy;
+    //limites
     if(nx <0 || nx>= t->W || ny <0 || ny>= t->H)return;
-    if(t->celdas[ny][nx] == NULL || (nx == rey->x && ny == rey->y)){
-        t->celdas[peon->y][peon->x] = NULL;
-        peon->x = nx;
-        peon->y = ny;
-        t->celdas[ny][nx] = (void*) peon;
+    //no se mueve si no es el rey
+    if(t->celdas[ny][nx] == NULL{
+        Pieza *p =(Pieza*) t->celdas[ny][nx];
+        if(p->tipo != 'R') return;
     }
+    t->celdas[peon->y][peon->x] = NULL;
+    peon->x = nx;
+    peon->y = ny;
+    t->celdas[ny][nx] = (void*) peon;
 }
 
 void mover_caballo(Tablero *t, Pieza *p, Pieza *rey){
